@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Hover Rows</h2>
+  <div sec:authorize="isAuthenticated()">
+    Welcome <b><span sec:authentication="name">Username</span></b> &nbsp;
+    <i><span sec:authentication="principal.authorities">Roles</span></i>
+  </div>
+  <form th:action="@{/logout}" method="post">
+    <input color="blue" type="submit" value="Logout" />
+  </form>
+
+  <div sec:authorize="hasAnyAuthority('ADMIN', 'CREATOR')">
+  <a th:href="@{/new}" style="margin: 20px 0" class="btn btn-info">Add</a>
+  </div>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>SNo</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Location</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each =" user :${students}">
+      <td th:text ="${user.id}"></td>
+      <td th:text ="${user.name}" ></td>
+      <td th:text ="${user.email}"></td>
+      <td th:text ="${user.location}" ></td>
+      <td sec:authorize="hasAnyAuthority('ADMIN')">
+          <a th:href="@{'/edit/' + ${user.id}}" class="btn btn-warning">Update</a>
+        &nbsp;&nbsp;&nbsp;
+      </td>
+      <td sec:authorize="hasAnyAuthority('ADMIN')">
+        <a th:href="@{'/delete/' + ${user.id}}"  class="btn btn-danger">Delete</a>
+
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
